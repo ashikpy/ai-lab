@@ -1,175 +1,166 @@
 export const CodeData = {
   1: {
-    question: `For the data given below, perform the following;
-    i) Bar plot; 
-    ii) Vertical Bar plot; 
-    iii) Scatter plot; 
-    iv) Histogram;`,
+    question: `N-Queen`,
 
     code: `
-import pandas as pd
-import matplotlib.pyplot as plt
-df=pd.read_csv('https://raw.githubusercontent.com/ashikpy/csvs/refs/heads/main/plot.csv')
-plt.barh(df['DAY'], df['SOLAR'])
-plt.show()
-plt.bar(df['DAY'], df['SOLAR'])
-plt.show()
-plt.scatter(df['DAY'],df['WIND'])
-plt.show()
-plt.hist(df['DAY'])
-plt.show(
+def solve(board=None, row=0, n=8):
+    if board is None:
+        board = [-1] * n  # Initialize the board with -1 for empty positions
+    if row == n: 
+        print(board)
+        return True  # Stop recursion after finding the first solution
+    for col in range(n):
+        if all(board[r] != col and abs(r - row) != abs(board[r] - col) for r in range(row)):
+            board[row] = col
+            if solve(board, row + 1, n): return True  # Found a solution, return True
+solve(n=4)  # Example for n=4
 `,
 
     description: ``,
   },
 
   2: {
-    question:
-      "Use the array processing package perform the following.; i) Create a numpy array.; ii) Demonstrate Indexing in numpy array.; iii) Perform basic operations on a single array.",
+    question: "Constrain Satisfaction Problem",
     code: `
-import numpy as np
-array = np.array([10, 20, 30, 40, 50])
-print("First element:", array[0])  
-print("Last element:", array[-1])  
-print("Add 5:", array + 5)  
-print("Multiply by 2:", array * 2)  
-print("Square:", array ** 2)  
-print("Sum:", np.sum(array))
+!pip install python-constraint
+from constraint import Problem
+problem = Problem()
+problem.addVariable('A', range(1, 6))
+problem.addVariable('B', range(1, 6))
+problem.addVariable('C', range(1, 11))
+problem.addConstraint(lambda a, c: a * 2 == c, ('A', 'C'))
+problem.addConstraint(lambda a, b, c: a + b == c, ('A', 'B', 'C'))
+for solution in problem.getSolutions():
+    print("A: {}, B: {}, C: {}".format(solution['A'], solution['B'], solution['C']))
 `,
 
     description: ``,
   },
   3: {
-    question: `
-    Write a python program to determine the distance between two points (x1,y1) and (x2,y2).
-  `,
+    question: `AO*`,
 
     description: ``,
     code: `
-x1 = int(input("Enter the location x1: "))
-y1 = int(input("Enter the location y1: "))
-x2 = int(input("Enter the location x2: "))
-y2 = int(input("Enter the location y2: "))
-print("The distance between the points:", ((x2 x1)**2 + (y2 - - y1)**2)**0.5)
-
+class Node:
+    def __init__(self, name, node_type, children=None):
+        self.name = name
+        self.node_type = node_type
+        self.children = children if children else []
+def ao_star(node):
+    if node.node_type == "OR":
+        for child in node.children:
+            if ao_star(child) == "Goal Reached!":
+                return "Goal Reached!"
+    elif node.node_type == "AND":
+        return "Goal Reached!"
+    return "Goal not reached"
+step1 = Node("Step 1", "AND")
+step2 = Node("Step 2", "AND")
+route_a = Node("Route A", "OR", [step1, step2])
+goal = Node("Arrive at destination", "OR", [route_a])
+print(ao_star(goal))
 `,
   },
 
   4: {
-    question: `
-   Write a python program to arrange the given numbers/words in ascending/Descending order.
-    `,
+    question: `8-Queen`,
     description: ``,
 
     code: `
-data = input("Enter numbers or words separated by space: ").split()
-data = [int(i) if i.isdigit() else i.lower() for i in data]
-order = input("Enter the order (ascending/descending): ").lower()
-print(sorted (data, reverse=(order == "descending")))
-
+def solve(board=[-1]*8, row=0):
+    if row == 8: 
+        print(board)
+        return True  # Stop recursion after finding the first solution
+    for col in range(8):
+        if all(board[r] != col and abs(r - row) != abs(board[r] - col) for r in range(row)):
+            board[row] = col
+            if solve(board, row + 1): return True  # Found a solution, return True
+solve()
 `,
   },
-
   5: {
-    question: `
-        Perform the following using Pandas Data frame:;
-    i) Create a data frame using list;
-    ii) Create DataFrame from dict of narray/list;
-    iii) Indexing a DataFrame using .loc[]
-    `,
+    question: `A* Greedy First`,
     description: ``,
-
     code: `
-data_list = [[1, 'Alice', 25], [2, 'Bob', 30], [3, 'Charlie', 35]]
-df = pd.DataFrame(data_list, columns=['ID', 'Name', 'Age'])
-df
-data_dict = {'ID': [1, 2, 3],'Name': ['Alice', 'Bob', 'Charlie'],'Age': [25, 30, 35]}
-df_dict = pd.DataFrame(data_dict)
-df_dict
-df_dict.loc[2]
+import heapq
+def greedy_best_first_search(graph, start, goal, heuristic):
+    pq, visited = [(heuristic[start], start, [start])], set()
+    while pq:
+        _, node, path = heapq.heappop(pq)
+        if node == goal: return path
+        if node not in visited:
+            visited.add(node)
+            for neighbor, _ in graph.get(node, []):
+                if neighbor not in visited:
+                    heapq.heappush(pq, (heuristic[neighbor], neighbor, path + [neighbor]))
+    return None
+graph = {'A': [('B', 1), ('C', 3)], 'B': [('D', 4), ('E', 2)], 'C': [('F', 5)], 'D': [('G', 6)], 'E': [('G', 1)], 'F': [('G', 2)], 'G': []}
+heuristic = {'A': 10, 'B': 6, 'C': 7, 'D': 3, 'E': 2, 'F': 6, 'G': 0}
+start, goal = 'A', 'G'
+path = greedy_best_first_search(graph, start, goal, heuristic)
+print("Path found:", " -> ".join(path) if path else "No path found.")
 `,
   },
   6: {
-    question: `Write a python program to generate Armstrong number.`,
-    description: ``,
-    code: `
-n = int(input("Enter the number: "))
-num_digits = len(str(n))
-s, temp = 0, n
-while n > 0:
-s += (n % 10) ** num_digits
-n //= 10
-print("It is an Armstrong number." if s == temp else "It is not an Armstrong number.")
-`,
-  },
-  7: {
-    question: `Write a python program to check the given string is palindrome or not.`,
+    question: `TSP`,
     description: ``,
 
     code: `
-input_string = input("Enter a string: ").replace("", "").lower()
-print(f"{input_string} is a palindrome." if
-input_string==input_string[::-1] else f"{input_string} is not a palindrome.")
+def nearest_neighbor_tsp(distances):
+    n = len(distances)
+    visited, route, total_distance = [False] * n, [0], 0
+    visited[0] = True
+    for _ in range(1, n):
+        last = route[-1]
+        nearest = min((i for i in range(n) if not visited[i]), key=lambda i: distances[last][i])
+        visited[nearest], route = True, route + [nearest]
+        total_distance += distances[last][nearest]
+    return route + [0], total_distance + distances[route[-1]][0]
+distances = [
+    [0, 2, 9, 10],
+    [1, 0, 6, 4],
+    [15, 7, 0, 8],
+    [6, 3, 12, 0]
+]
+route_nn, total_distance_nn = nearest_neighbor_tsp(distances)
+print("Route:", route_nn)
+print("Total distance:", total_distance_nn)
+`,
+  },
+  7: {
+    question: `α β pruning`,
+    description: ``,
+    code: `
+def minimax(depth, node_index, maximizing_player, values, alpha, beta):
+    if depth == 3: return values[node_index]
+    eval_func = max if maximizing_player else min
+    best_value = float('-inf') if maximizing_player else float('inf')
+    for i in range(2):
+        eval = minimax(depth + 1, node_index * 2 + i, not maximizing_player, values, alpha, beta)
+        best_value = eval_func(best_value, eval)
+        alpha, beta = (max(alpha, eval), beta) if maximizing_player else (alpha, min(beta, eval))
+        if beta <= alpha: break
+    return best_value
+values = [3, 5, 6, 9, 1, 2, 0, -1] 
+print("The optimal value is:", minimax(0, 0, True, values, float('-inf'), float('inf')))
 `,
   },
   8: {
-    question: `Write a python program to find the area of shapes.`,
+    question: `Propositional Logic checking`,
     description: ``,
     code: `
-radius = float(input("Enter the radius of the circle: "))
-print(f"The area of the circle is: 3.14 * radius ** 2}")
-length = float(input("Enter the length of the rectangle: "))
-width = float(input("Enter the width of the rectangle: "))
-print(f"The area of the rectangle is: {length * width}")
-base = float(input("Enter the base of the triangle: "))
-height = float(input("Enter the height of the triangle: "))
-print(f"The area of the triangle is: {0.5 * base * height}")
-side = float(input("Enter the side of the square: "))
-print(f"The area of the square is: {side ** 2}")
-`,
-  },
-  9: {
-    question: `Write a python program to find the greatest common divisor between two numbers`,
-    description: ``,
-    code: `
-a = int(input("Enter the first number: "))
-b = int(input("Enter the second number: "))
-while b!= 0:
-a, b = b, a% b
-result = a
-print("The GCD of number is: ", result)
-`,
-  },
-  10: {
-    question: `Perform Time series data visualization using Python.`,
-    description: ``,
-    code: `
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-date_range = pd.date_range(start='2023-01-01', periods=100, freq='D') 
-temp = np.random.uniform(20, 35, 100)
-df = pd.DataFrame({'Date': date_range,'Temperature': temp})
-plt.plot(df.index, df['Temperature'])
-`,
-  },
-  11: {
-    question: `Perform Exploratory Data Analysis on Wine Quality Data Set.`,
-    description: ``,
-    code: `
-import pandas as pd
-import matplotlib.pyplot as plt
-df=pd.read_csv('https://raw.githubusercontent.com/ashikpy/csvs/refs/heads/main/wine.csv')
-df.head()
-df.hist(bins=10, figsize=(20, 14))
-plt.show()
-plt.scatter(df['alcohol'], df['quality'])
-plt.xlabel('Alcohol')
-plt.ylabel('Quality')
-plt.title('Alcohol vs Quality')
-plt.show()
-print("\nMissing values per column:")
-print(df.isnull().sum())
+def evaluate_formula(formula, model):
+    formula = formula.replace('∧', ' and ').replace('∨', ' or ').replace('¬', ' not ').replace('→', '<=')
+    for var, value in model.items():
+        formula = formula.replace(var, str(value))  # Replace variables with their values
+    try:
+        return eval(formula)  # Evaluate the formula after all replacements
+    except Exception:
+        return False  # If there is an error in evaluation, return False
+if __name__ == "__main__":
+    formula = "(p ∨ q) → (r ∧ ¬p)"
+    model = {'p': True, 'q': False, 'r': True}
+    print(f"The formula {formula} is {'satisfied' if evaluate_formula(formula, model) else 'NOT satisfied'} by the model {model}")
 `,
   },
 };
