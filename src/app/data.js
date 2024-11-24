@@ -7,7 +7,7 @@ def solve(board=None, row=0, n=8):
     if board is None:
         board = [-1] * n  # Initialize the board with -1 for empty positions
     if row == n: 
-        print(board)
+        print([x + 1 for x in board])
         return True  # Stop recursion after finding the first solution
     for col in range(n):
         if all(board[r] != col and abs(r - row) != abs(board[r] - col) for r in range(row)):
@@ -69,7 +69,7 @@ print(ao_star(goal))
     code: `
 def solve(board=[-1]*8, row=0):
     if row == 8: 
-        print(board)
+        print([x + 1 for x in board])
         return True  # Stop recursion after finding the first solution
     for col in range(8):
         if all(board[r] != col and abs(r - row) != abs(board[r] - col) for r in range(row)):
