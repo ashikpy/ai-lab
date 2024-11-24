@@ -126,13 +126,13 @@ function Hero({ questionId }) {
             <FcPrevious />
             Question {Number(questionId) - 1}
           </Link>
-          <Link
+          {/* <Link
             href={`/`}
             className={`flex w-max items-center gap-2 rounded-md bg-[#ededed] p-2 px-4 font-bold text-black`}
           >
             Home
             <BiLinkExternal />
-          </Link>
+          </Link> */}
           <Link
             href={`/question/${Number(questionId) + 1}`}
             className={`flex w-max items-center gap-2 rounded-md bg-[#ededed] p-2 px-4 font-bold text-black ${ifLastPages ? "cursor-not-allowed text-slate-400 line-through" : ""}`}
