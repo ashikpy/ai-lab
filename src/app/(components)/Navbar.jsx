@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import { CodeData } from "../data";
 
 function MobView({ className }) {
-  const questions = Array.from({ length: 11 }, (_, i) => i + 1);
+  const questions = Array.from({ length: 8 }, (_, i) => i + 1);
 
   return (
     <div
