@@ -163,4 +163,48 @@ if __name__ == "__main__":
     print(f"The formula {formula} is {'satisfied' if evaluate_formula(formula, model) else 'NOT satisfied'} by the model {model}")
 `,
   },
+  9: {
+    question: `Write simple fact for the statements using PROLOG.`,
+    code: `
+
+man(john).
+
+woman(mary).
+
+father(tom, alice).
+
+taller(jack, john).
+
+animal(cat).
+
+sky_is_blue.
+
+orbits(earth, sun).
+
+on(book, table).
+
+vegetable(carrot).
+
+likes(alice, apple).
+`,
+  },
+  10: {
+    question: `Write a Prolog program for implementing the solution for Cryptarithmetic`,
+    code: `
+:- use_module(library(clpfd)).
+cryptarithmetic(T, W, O, F, U, R) :-
+all_different([T, W, O, F, U, R]),
+T in 1..9,
+W in 0..9,
+O in 0..9,
+F in 1..9,
+U in 0..9,
+R in 0..9,
+Two #= 100*T + 10*W + O,
+Four #= 1000*F + 100*O + 10*U + R,
+Two + Two #= Four,
+label([T, W, O, F, U, R]),
+format('TWO + TWO = FOUR: ~d + ~d = ~d~n', [Two, Two, Four]). 
+    `,
+  },
 };
